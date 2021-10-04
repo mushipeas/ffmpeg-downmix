@@ -72,31 +72,41 @@ else
     AUDIO_FMT="aac"
 fi
 
-rm -f temp_stereo_audio.m4a
+rm -f .temp_stereo_audio.m4a
 
 ffmpeg -i "$INPUT_FILENAME" -vn \
     -acodec $AUDIO_FMT -b:a $AUDIO_BRT \
     -af "pan=stereo|FL=$FL|FR=$FR" \
-    temp_stereo_audio.m4a
+    .temp_stereo_audio.m4a
 
     # to test a snippet of the video
     # -ss 0:00.0 -t 600 \
 
-ffmpeg -i "$INPUT_FILENAME" -i temp_stereo_audio.m4a -map 0:v:0 \
-    -map 1:a -map 0:a \
-    -map 0:s -c copy \
-    -disposition:a:0 default \
-    -shortest "$OUTPUT_FILENAME"
+DOWNMIX_AUDIO_STATUS=$?
 
-rm -f temp_stereo_audio.m4a
+if [ $DOWNMIX_AUDIO_STATUS -eq 0 ]
+then
+    ffmpeg -i "$INPUT_FILENAME" -i .temp_stereo_audio.m4a -map 0:v:0 \
+        -map 1:a -map 0:a \
+        -map 0:s -c copy \
+        -disposition:a:0 default \
+        -shortest "$OUTPUT_FILENAME"
+    
+    RECOMBINE_FILE_STATUS=$?
+fi
 
 ## If there was only one input given, delete input file and rename output file to original name.
 #  This is really for automation purposes. If testing, specify the output filename to preserve both files.
-if [ -z "$2" ]
-then
-    rm -f "$INPUT_FILENAME"
-    mv "$OUTPUT_FILENAME" "$INPUT_FILENAME"
+if [ $DOWNMIX_AUDIO_STATUS -eq 0 ] && [ $RECOMBINE_FILE_STATUS -eq 0 ]; then
+    if [ -z "$2" ]; then
+        rm -f "$INPUT_FILENAME"
+        mv "$OUTPUT_FILENAME" "$INPUT_FILENAME"
+    fi
+else
+    rm -f "$OUTPUT_FILENAME"
 fi
+
+rm -f .temp_stereo_audio.m4a
 
 exit 0
 
