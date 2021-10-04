@@ -19,6 +19,7 @@ if [ -z "$2" ]; then
 else
     OUTPUT_FILENAME="$2"
 fi
+TEMP_STEREO_AUDIO=".temp_stereo_audio_$RANDOM-$RANDOM-$RANDOM.m4a"
 
 AUDIO_CHANNELS=$(ffprobe -v error -select_streams a:0 -show_entries stream=channel_layout -of default=noprint_wrappers=1:nokey=1 "$1")
 #AUDIO_CHANNELS=$(ffprobe -v error -show_streams -select_streams a "$1" | grep -Po "(?<=^channel_layout\=)\d*\.\d*")
@@ -65,12 +66,12 @@ else
     AUDIO_FMT="aac"
 fi
 
-rm -f .temp_stereo_audio.m4a
+rm -f "$TEMP_STEREO_AUDIO"
 
 ffmpeg -i "$INPUT_FILENAME" -vn \
     -acodec $AUDIO_FMT -b:a $AUDIO_BRT \
     -af "pan=stereo|FL=$FL|FR=$FR" \
-    .temp_stereo_audio.m4a
+    "$TEMP_STEREO_AUDIO"
 
     # to test a snippet of the video
     # -ss 0:00.0 -t 600 \
@@ -78,7 +79,7 @@ ffmpeg -i "$INPUT_FILENAME" -vn \
 DOWNMIX_AUDIO_STATUS=$?
 
 if [ $DOWNMIX_AUDIO_STATUS -eq 0 ]; then
-    ffmpeg -i "$INPUT_FILENAME" -i .temp_stereo_audio.m4a -map 0:v:0 \
+    ffmpeg -i "$INPUT_FILENAME" -i "$TEMP_STEREO_AUDIO" -map 0:v:0 \
         -map 1:a -map 0:a \
         -map 0:s -c copy \
         -disposition:a:0 default \
@@ -98,7 +99,7 @@ else
     rm -f "$OUTPUT_FILENAME"
 fi
 
-rm -f .temp_stereo_audio.m4a
+rm -f "$TEMP_STEREO_AUDIO"
 
 exit 0
 
