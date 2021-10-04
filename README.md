@@ -63,8 +63,8 @@ The current mixing ratios in the script are as follows:
 
 ### 6.1 Surround
 
-    FL = "0.321953*FC + 0.455310*FL + 0.394310*SL + 0.227655*SR + 278819*BC + 0.321953*LFE"
-    FR = "0.321953*FC + 0.455310*FR + 0.394310*SR + 0.227655*SL + 278819*BC + 0.321953*LFE"
+    FL = "0.321953*FC + 0.455310*FL + 0.394310*SL + 0.227655*SR + 0.278819*BC + 0.321953*LFE"
+    FR = "0.321953*FC + 0.455310*FR + 0.394310*SR + 0.227655*SL + 0.278819*BC + 0.321953*LFE"
 
 ### 7.1 Surround
 
