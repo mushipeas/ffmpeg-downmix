@@ -1,8 +1,8 @@
 # FFPMEG-DOWNMIX
 
-An ffmpeg-docker wrapper for a script to appropriately downmix surround-sound audio to stereo, and add it to a media file.  
+An ffmpeg-docker wrapper for a script to appropriately downmix surround-sound audio in a media file to stereo, and append it to the media file.  
 
-The script requires a `workdir` folder to be mounted containing the input file. The output file is placed in the same directory.  
+The script requires a `workdir` folder to be mounted containing the input file. The output file is placed in the same directory.
 If the output file (arg#2) is not specified, the input file will be deleted at the end of the script and the output file will replace it.
 
 ## Docker
@@ -17,25 +17,29 @@ Run the script:
 
     docker run -v /ABSOLUTE/PATH/TO/WORKDIR:/workdir --rm ffmpeg-downmix INPUT_FILE [OUTPUT_FILE]
 
-Where `/ABSOLUTE/PATH/TO/WORKDIR`, `INPUT_FILE` and `[OUTPUT_FILE]` need to be modified per your usage.  
-`OUTPUT_FILE` is optional. If specified, the input will remain untouched.  
+Where `/ABSOLUTE/PATH/TO/WORKDIR`, `INPUT_FILE` and `[OUTPUT_FILE]` need to be modified per your usage.
+`OUTPUT_FILE` is optional. If specified, the input will remain untouched.
 If no `OUTPUT_FILE` is specified, the input_file will be overwritten with the output file at the end of the script.
 This second use is for automation cases where it is useful to replace the existing file.
 
-### Example [input and output files specified]
+### Example 1:
+
+Input and output files specified.
 
 The following example mounts the existing workdir folder in the repo, and downmixes the primary audio source in `input.mkv` to 
-a stereo source. It will **append** it to a new version of the file, `output.mkv`, as the new **default** source at **a:0**.  
+a stereo source. It will **append** it to a new version of the file, `output.mkv`, as the new **default** source at **a:0**.
 The original sources and subtitles will all be preserved:
 
     docker run -v C:\ffmpeg-downmix\workdir:/workdir --rm ffmpeg-downmix input.mkv output.mkv
 
 The output `output.mkv` will be in the same `workdir` folder as the input file.
 
-### Example 2  [only input file specified]
+### Example 2: 
+
+Only input file specified.
 
 The following example mounts the existing workdir folder in the repo, and downmixes the primary audio source in `input.mkv` to 
-a stereo source. It will **append** it to a new version of the file, `input_new.mkv`, as the new **default** source at **a:0**.  
+a stereo source. It will **append** it to a new version of the file, `input_new.mkv`, as the new **default** source at **a:0**.
 The script will then overwrite `input.mkv` with `input_new.mkv`.
 The original sources and subtitles will all be preserved:
 
