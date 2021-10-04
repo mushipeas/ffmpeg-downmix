@@ -53,7 +53,7 @@ The current mixing ratios in the script are as follows:
 
 ### 5.1 Surround
 
-    FL = "0.5*FC + 0.707 * FL+0.707*BL + 0.5*LFE"
+    FL = "0.5*FC + 0.707*FL + 0.707*BL + 0.5*LFE"
     FR = "0.5*FC + 0.707*FR + 0.707*BR + 0.5*LFE"
 
 ### 5.1(side) Surround
